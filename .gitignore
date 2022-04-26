@@ -1,6 +1,6 @@
 ######################################################################
 # Build Tools
-
+.flattened-pom.xml
 .gradle
 /build/
 !gradle/wrapper/gradle-wrapper.jar
