@@ -9,10 +9,10 @@ spring:
           url: jdbc:mysql://localhost:3306/ry-vue-toolbox?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
           username: root
           password:
-#        slave_1:
-#          url: jdbc:mysql://xx.xx.xx.xx:3307/dynamic
-#          username: root
-#          password: 123456
+      #        slave_1:
+      #          url: jdbc:mysql://xx.xx.xx.xx:3307/dynamic
+      #          username: root
+      #          password: 123456
       druid:
         initialSize: 5
         minIdle: 10
@@ -49,8 +49,3 @@ spring:
           config:
             multi-statement-allow: true
     type: com.alibaba.druid.pool.DruidDataSource
-mybatis-plus:
-  configuration:
-    map-underscore-to-camel-case: true #驼峰自动映射
-    cache-enabled: false
-  type-aliases-package: com.ruoyi.**.domain,com.ruoyi.common.core.domain.entity

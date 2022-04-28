@@ -45,8 +45,8 @@ spring:
   messages:
     # 国际化资源文件路径
     basename: i18n/messages
-  profiles: 
-    active: druid
+  profiles:
+    active: @profiles.active@
   # 文件上传
   servlet:
      multipart:
@@ -99,6 +99,12 @@ mybatis:
     mapperLocations: classpath*:mapper/**/*Mapper.xml
     # 加载全局的配置文件
     configLocation: classpath:mybatis/mybatis-config.xml
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true #驼峰自动映射
+    cache-enabled: false
+  type-aliases-package: com.ruoyi.**.domain,com.ruoyi.common.core.domain.entity
 
 # PageHelper分页插件
 pagehelper: 
