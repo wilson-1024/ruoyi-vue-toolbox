@@ -1,7 +1,9 @@
 package com.ruoyi.web.controller.common;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -73,7 +75,7 @@ public class CommonController
      * 通用上传请求（单个）
      */
     @PostMapping("/upload")
-    public AjaxResult uploadFile(MultipartFile file) throws Exception
+    public AjaxResult<Map<String, Object>> uploadFile(MultipartFile file) throws Exception
     {
         try
         {
@@ -82,16 +84,16 @@ public class CommonController
             // 上传并返回新文件名称
             String fileName = FileUploadUtils.upload(filePath, file);
             String url = serverConfig.getUrl() + fileName;
-            AjaxResult ajax = AjaxResult.success();
+            Map<String,Object> ajax = new HashMap<>(4);
             ajax.put("url", url);
             ajax.put("fileName", fileName);
             ajax.put("newFileName", FileUtils.getName(fileName));
             ajax.put("originalFilename", file.getOriginalFilename());
-            return ajax;
+            return AjaxResult.success(ajax);
         }
         catch (Exception e)
         {
-            return AjaxResult.error(e.getMessage());
+            return AjaxResult.error(e.getMessage(), null);
         }
     }
 
@@ -99,7 +101,7 @@ public class CommonController
      * 通用上传请求（多个）
      */
     @PostMapping("/uploads")
-    public AjaxResult uploadFiles(List<MultipartFile> files) throws Exception
+    public AjaxResult<Map<String,Object>> uploadFiles(List<MultipartFile> files) throws Exception
     {
         try
         {
@@ -119,16 +121,16 @@ public class CommonController
                 newFileNames.add(FileUtils.getName(fileName));
                 originalFilenames.add(file.getOriginalFilename());
             }
-            AjaxResult ajax = AjaxResult.success();
+            Map<String,Object> ajax = new HashMap<>();
             ajax.put("urls", StringUtils.join(urls, FILE_DELIMETER));
             ajax.put("fileNames", StringUtils.join(fileNames, FILE_DELIMETER));
             ajax.put("newFileNames", StringUtils.join(newFileNames, FILE_DELIMETER));
             ajax.put("originalFilenames", StringUtils.join(originalFilenames, FILE_DELIMETER));
-            return ajax;
+            return AjaxResult.success(ajax);
         }
         catch (Exception e)
         {
-            return AjaxResult.error(e.getMessage());
+            return AjaxResult.error(e.getMessage(), null);
         }
     }
 

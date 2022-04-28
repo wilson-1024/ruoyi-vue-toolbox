@@ -84,7 +84,7 @@ public class SysUserOnlineController extends BaseController
     @PreAuthorize("@ss.hasPermi('monitor:online:forceLogout')")
     @Log(title = "在线用户", businessType = BusinessType.FORCE)
     @DeleteMapping("/{tokenId}")
-    public AjaxResult forceLogout(@PathVariable String tokenId)
+    public AjaxResult<Void> forceLogout(@PathVariable String tokenId)
     {
         redisCache.deleteObject(Constants.LOGIN_TOKEN_KEY + tokenId);
         return AjaxResult.success();

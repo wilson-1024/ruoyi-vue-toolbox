@@ -2,6 +2,8 @@ package com.ruoyi.web.controller.common;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
@@ -42,14 +44,14 @@ public class CaptchaController
      * 生成验证码
      */
     @GetMapping("/captchaImage")
-    public AjaxResult getCode(HttpServletResponse response) throws IOException
+    public AjaxResult<Map<String,Object>> getCode(HttpServletResponse response) throws IOException
     {
-        AjaxResult ajax = AjaxResult.success();
+        Map<String,Object> ajax = new HashMap<>(3);
         boolean captchaOnOff = configService.selectCaptchaOnOff();
         ajax.put("captchaOnOff", captchaOnOff);
         if (!captchaOnOff)
         {
-            return ajax;
+            return AjaxResult.success(ajax);
         }
 
         // 保存验证码信息
@@ -83,11 +85,11 @@ public class CaptchaController
         }
         catch (IOException e)
         {
-            return AjaxResult.error(e.getMessage());
+            return AjaxResult.error(e.getMessage(), null);
         }
 
         ajax.put("uuid", uuid);
         ajax.put("img", Base64.encode(os.toByteArray()));
-        return ajax;
+        return AjaxResult.success(ajax);
     }
 }

@@ -1,6 +1,9 @@
 package com.ruoyi.web.controller.system;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,14 +46,14 @@ public class SysProfileController extends BaseController
      * 个人信息
      */
     @GetMapping
-    public AjaxResult profile()
+    public AjaxResult<Map<String,Object>> profile()
     {
         LoginUser loginUser = getLoginUser();
         SysUser user = loginUser.getUser();
-        AjaxResult ajax = AjaxResult.success(user);
+        Map<String, Object> ajax = new HashMap<>(2);
         ajax.put("roleGroup", userService.selectUserRoleGroup(loginUser.getUsername()));
         ajax.put("postGroup", userService.selectUserPostGroup(loginUser.getUsername()));
-        return ajax;
+        return AjaxResult.success(ajax);
     }
 
     /**
@@ -58,7 +61,7 @@ public class SysProfileController extends BaseController
      */
     @Log(title = "个人信息", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult updateProfile(@RequestBody SysUser user)
+    public AjaxResult<Void> updateProfile(@RequestBody SysUser user)
     {
         LoginUser loginUser = getLoginUser();
         SysUser sysUser = loginUser.getUser();
@@ -93,7 +96,7 @@ public class SysProfileController extends BaseController
      */
     @Log(title = "个人信息", businessType = BusinessType.UPDATE)
     @PutMapping("/updatePwd")
-    public AjaxResult updatePwd(String oldPassword, String newPassword)
+    public AjaxResult<Void> updatePwd(String oldPassword, String newPassword)
     {
         LoginUser loginUser = getLoginUser();
         String userName = loginUser.getUsername();
@@ -121,7 +124,7 @@ public class SysProfileController extends BaseController
      */
     @Log(title = "用户头像", businessType = BusinessType.UPDATE)
     @PostMapping("/avatar")
-    public AjaxResult avatar(@RequestParam("avatarfile") MultipartFile file) throws IOException
+    public AjaxResult<Map<String,Object>> avatar(@RequestParam("avatarfile") MultipartFile file) throws IOException
     {
         if (!file.isEmpty())
         {
@@ -129,14 +132,14 @@ public class SysProfileController extends BaseController
             String avatar = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file);
             if (userService.updateUserAvatar(loginUser.getUsername(), avatar))
             {
-                AjaxResult ajax = AjaxResult.success();
+                Map<String,Object> ajax = new HashMap<>(1);
                 ajax.put("imgUrl", avatar);
                 // 更新缓存用户头像
                 loginUser.getUser().setAvatar(avatar);
                 tokenService.setLoginUser(loginUser);
-                return ajax;
+                return AjaxResult.success(ajax);
             }
         }
-        return AjaxResult.error("上传图片异常，请联系管理员");
+        return AjaxResult.error("上传图片异常，请联系管理员",null);
     }
 }

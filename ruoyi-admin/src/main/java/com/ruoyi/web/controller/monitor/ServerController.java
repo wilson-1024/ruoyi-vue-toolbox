@@ -18,7 +18,7 @@ public class ServerController
 {
     @PreAuthorize("@ss.hasPermi('monitor:server:list')")
     @GetMapping()
-    public AjaxResult getInfo() throws Exception
+    public AjaxResult<Server> getInfo() throws Exception
     {
         Server server = new Server();
         server.copyTo();

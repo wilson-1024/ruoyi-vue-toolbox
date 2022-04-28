@@ -62,7 +62,7 @@ public class SysConfigController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:config:query')")
     @GetMapping(value = "/{configId}")
-    public AjaxResult getInfo(@PathVariable Long configId)
+    public AjaxResult<SysConfig> getInfo(@PathVariable Long configId)
     {
         return AjaxResult.success(configService.selectConfigById(configId));
     }
@@ -71,9 +71,9 @@ public class SysConfigController extends BaseController
      * 根据参数键名查询参数值
      */
     @GetMapping(value = "/configKey/{configKey}")
-    public AjaxResult getConfigKey(@PathVariable String configKey)
+    public AjaxResult<String> getConfigKey(@PathVariable String configKey)
     {
-        return AjaxResult.success(configService.selectConfigByKey(configKey));
+        return AjaxResult.success("",configService.selectConfigByKey(configKey));
     }
 
     /**
@@ -82,7 +82,7 @@ public class SysConfigController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:config:add')")
     @Log(title = "参数管理", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@Validated @RequestBody SysConfig config)
+    public AjaxResult<Void> add(@Validated @RequestBody SysConfig config)
     {
         if (UserConstants.NOT_UNIQUE.equals(configService.checkConfigKeyUnique(config)))
         {
@@ -98,7 +98,7 @@ public class SysConfigController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:config:edit')")
     @Log(title = "参数管理", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@Validated @RequestBody SysConfig config)
+    public AjaxResult<Void> edit(@Validated @RequestBody SysConfig config)
     {
         if (UserConstants.NOT_UNIQUE.equals(configService.checkConfigKeyUnique(config)))
         {
@@ -114,7 +114,7 @@ public class SysConfigController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:config:remove')")
     @Log(title = "参数管理", businessType = BusinessType.DELETE)
     @DeleteMapping("/{configIds}")
-    public AjaxResult remove(@PathVariable Long[] configIds)
+    public AjaxResult<Void> remove(@PathVariable Long[] configIds)
     {
         configService.deleteConfigByIds(configIds);
         return success();
@@ -126,7 +126,7 @@ public class SysConfigController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:config:remove')")
     @Log(title = "参数管理", businessType = BusinessType.CLEAN)
     @DeleteMapping("/refreshCache")
-    public AjaxResult refreshCache()
+    public AjaxResult<Void> refreshCache()
     {
         configService.resetConfigCache();
         return AjaxResult.success();
