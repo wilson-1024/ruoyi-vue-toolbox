@@ -1,6 +1,5 @@
 package com.ruoyi.system.service.impl;
 
-import com.ruoyi.common.annotation.DataSource;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.redis.RedisCache;
@@ -47,7 +46,6 @@ public class SysConfigServiceImpl implements ISysConfigService
      * @return 参数配置信息
      */
     @Override
-    @DataSource(DataSourceType.MASTER)
     public SysConfig selectConfigById(Long configId)
     {
         SysConfig config = new SysConfig();
