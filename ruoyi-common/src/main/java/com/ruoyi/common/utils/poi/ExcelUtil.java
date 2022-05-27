@@ -1,69 +1,5 @@
 package com.ruoyi.common.utils.poi;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.lang3.RegExUtils;
-import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
-import org.apache.poi.hssf.usermodel.HSSFPicture;
-import org.apache.poi.hssf.usermodel.HSSFPictureData;
-import org.apache.poi.hssf.usermodel.HSSFShape;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ooxml.POIXMLDocumentPart;
-import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.ClientAnchor;
-import org.apache.poi.ss.usermodel.DataValidation;
-import org.apache.poi.ss.usermodel.DataValidationConstraint;
-import org.apache.poi.ss.usermodel.DataValidationHelper;
-import org.apache.poi.ss.usermodel.DateUtil;
-import org.apache.poi.ss.usermodel.Drawing;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.PictureData;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.VerticalAlignment;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.ss.util.CellRangeAddressList;
-import org.apache.poi.util.IOUtils;
-import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
-import org.apache.poi.xssf.usermodel.XSSFDataValidation;
-import org.apache.poi.xssf.usermodel.XSSFDrawing;
-import org.apache.poi.xssf.usermodel.XSSFPicture;
-import org.apache.poi.xssf.usermodel.XSSFShape;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.openxmlformats.schemas.drawingml.x2006.spreadsheetDrawing.CTMarker;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.annotation.Excel.ColumnType;
 import com.ruoyi.common.annotation.Excel.Type;
@@ -79,6 +15,29 @@ import com.ruoyi.common.utils.file.FileTypeUtils;
 import com.ruoyi.common.utils.file.FileUtils;
 import com.ruoyi.common.utils.file.ImageUtils;
 import com.ruoyi.common.utils.reflect.ReflectUtils;
+import org.apache.commons.lang3.RegExUtils;
+import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.ooxml.POIXMLDocumentPart;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.ss.util.CellRangeAddressList;
+import org.apache.poi.util.IOUtils;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.*;
+import org.openxmlformats.schemas.drawingml.x2006.spreadsheetDrawing.CTMarker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Excel相关处理
@@ -672,21 +631,46 @@ public class ExcelUtil<T>
         style.setFont(totalFont);
         styles.put("total", style);
 
-        style = wb.createCellStyle();
-        style.cloneStyleFrom(styles.get("data"));
-        style.setAlignment(HorizontalAlignment.LEFT);
-        styles.put("data1", style);
+        styles.putAll(annotationStyles(wb));
 
-        style = wb.createCellStyle();
-        style.cloneStyleFrom(styles.get("data"));
-        style.setAlignment(HorizontalAlignment.CENTER);
-        styles.put("data2", style);
+        return styles;
+    }
 
-        style = wb.createCellStyle();
-        style.cloneStyleFrom(styles.get("data"));
-        style.setAlignment(HorizontalAlignment.RIGHT);
-        styles.put("data3", style);
-
+    /**
+     * 根据Excel注解创建表格样式
+     * 
+     * @param wb 工作薄对象
+     * @return 自定义样式列表
+     */
+    private Map<String, CellStyle> annotationStyles(Workbook wb)
+    {
+        Map<String, CellStyle> styles = new HashMap<String, CellStyle>();
+        for (Object[] os : fields)
+        {
+            Excel excel = (Excel) os[1];
+            String key = "data_" + excel.align() + "_" + excel.color();
+            if (!styles.containsKey(key))
+            {
+                CellStyle style = wb.createCellStyle();
+                style = wb.createCellStyle();
+                style.setAlignment(excel.align());
+                style.setVerticalAlignment(VerticalAlignment.CENTER);
+                style.setBorderRight(BorderStyle.THIN);
+                style.setRightBorderColor(IndexedColors.GREY_50_PERCENT.getIndex());
+                style.setBorderLeft(BorderStyle.THIN);
+                style.setLeftBorderColor(IndexedColors.GREY_50_PERCENT.getIndex());
+                style.setBorderTop(BorderStyle.THIN);
+                style.setTopBorderColor(IndexedColors.GREY_50_PERCENT.getIndex());
+                style.setBorderBottom(BorderStyle.THIN);
+                style.setBottomBorderColor(IndexedColors.GREY_50_PERCENT.getIndex());
+                Font dataFont = wb.createFont();
+                dataFont.setFontName("Arial");
+                dataFont.setFontHeightInPoints((short) 10);
+                dataFont.setColor(excel.color().index);
+                style.setFont(dataFont);
+                styles.put(key, style);
+            }
+        }
         return styles;
     }
 
@@ -808,8 +792,7 @@ public class ExcelUtil<T>
             {
                 // 创建cell
                 cell = row.createCell(column);
-                int align = attr.align().value();
-                cell.setCellStyle(styles.get("data" + (align >= 1 && align <= 3 ? align : "")));
+                cell.setCellStyle(styles.get("data_" + attr.align() + "_" + attr.color()));
 
                 // 用于读取对象中的属性
                 Object value = getTargetValue(vo, field, attr);
