@@ -361,13 +361,13 @@ export default {
     /** 查询菜单树结构 */
     getMenuTreeselect() {
       menuTreeselect().then(response => {
-        this.menuOptions = response.data;
+        this.menuOptions = response.data.menus;
       });
     },
     /** 查询部门树结构 */
     getDeptTreeselect() {
       deptTreeselect().then(response => {
-        this.deptOptions = response.data;
+        this.deptOptions = response.data.depts;
       });
     },
     // 所有菜单节点数据
@@ -523,7 +523,7 @@ export default {
         this.open = true;
         this.$nextTick(() => {
           roleMenu.then(res => {
-            let checkedKeys = res.checkedKeys
+            let checkedKeys = res.data.checkedKeys
             checkedKeys.forEach((v) => {
                 this.$nextTick(()=>{
                     this.$refs.menu.setChecked(v, true ,false);
@@ -549,7 +549,7 @@ export default {
         this.openDataScope = true;
         this.$nextTick(() => {
           roleDeptTreeselect.then(res => {
-            this.$refs.dept.setCheckedKeys(res.checkedKeys);
+            this.$refs.dept.setCheckedKeys(res.data.checkedKeys);
           });
         });
         this.title = "分配数据权限";

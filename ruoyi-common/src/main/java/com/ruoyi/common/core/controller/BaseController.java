@@ -3,6 +3,7 @@ package com.ruoyi.common.core.controller;
 import java.beans.PropertyEditorSupport;
 import java.util.Date;
 import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.WebDataBinder;
@@ -79,14 +80,13 @@ public class BaseController
     /**
      * 响应请求分页数据
      */
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    protected TableDataInfo getDataTable(List<?> list)
+    protected <t>TableDataInfo<t> getDataTable(List<t> list)
     {
-        TableDataInfo rspData = new TableDataInfo();
+        TableDataInfo<t> rspData = new TableDataInfo<t>();
         rspData.setCode(HttpStatus.SUCCESS);
         rspData.setMsg("查询成功");
         rspData.setRows(list);
-        PageInfo pageInfo = new PageInfo(list);
+        PageInfo<t> pageInfo = new PageInfo<t>(list);
         rspData.setTotal(pageInfo.getTotal());
         rspData.setHasNextPage(pageInfo.isHasNextPage());
         return rspData;
