@@ -1,7 +1,12 @@
 package com.ruoyi.web.controller.system;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.core.domain.entity.SysDept;
+import com.ruoyi.system.service.ISysDeptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -32,7 +37,7 @@ import com.ruoyi.system.service.ISysUserService;
 
 /**
  * 角色信息
- * 
+ *
  * @author ruoyi
  */
 @RestController
@@ -44,12 +49,15 @@ public class SysRoleController extends BaseController
 
     @Autowired
     private TokenService tokenService;
-    
+
     @Autowired
     private SysPermissionService permissionService;
-    
+
     @Autowired
     private ISysUserService userService;
+
+    @Autowired
+    private ISysDeptService deptService;
 
     @PreAuthorize("@ss.hasPermi('system:role:list')")
     @GetMapping("/list")
@@ -121,7 +129,7 @@ public class SysRoleController extends BaseController
             return AjaxResult.error("修改角色'" + role.getRoleName() + "'失败，角色权限已存在");
         }
         role.setUpdateBy(getUsername());
-        
+
         if (roleService.updateRole(role) > 0)
         {
             // 更新缓存用户权限
@@ -241,5 +249,18 @@ public class SysRoleController extends BaseController
     {
         roleService.checkRoleDataScope(roleId);
         return toAjax(roleService.insertAuthUsers(roleId, userIds));
+    }
+
+    /**
+     * 获取对应角色部门树列表
+     */
+    @PreAuthorize("@ss.hasPermi('system:role:query')")
+    @GetMapping(value = "/deptTree/{roleId}")
+    public AjaxResult<Map<String, Object>> deptTree(@PathVariable("roleId") Long roleId)
+    {
+        Map<String, Object> ajax = new HashMap<>(2);
+        ajax.put("checkedKeys", deptService.selectDeptListByRoleId(roleId));
+        ajax.put("depts", deptService.selectDeptTreeList(new SysDept()));
+        return AjaxResult.success(ajax);
     }
 }

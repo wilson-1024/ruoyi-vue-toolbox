@@ -27,6 +27,7 @@
         <module>ruoyi-generator</module>
         <module>ruoyi-common</module>
         <module>ruoyi-dependencies-bom</module>
+        <module>ruoyi-workflow</module>
     </modules>
 
 

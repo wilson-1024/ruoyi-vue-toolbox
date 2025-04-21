@@ -33,6 +33,7 @@
         <spring-boot.version>2.5.14</spring-boot.version>
         <lombok.version>1.18.22</lombok.version>
         <knife4j.version>3.0.2</knife4j.version>
+        <flowlong.version>1.1.6</flowlong.version>
     </properties>
 
     <!-- 依赖声明 -->
@@ -208,6 +209,12 @@
             </dependency>
 
             <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>ruoyi-workflow</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
@@ -217,6 +224,12 @@
                 <groupId>com.github.xiaoymin</groupId>
                 <artifactId>knife4j-spring-ui</artifactId>
                 <version>${knife4j.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.aizuda</groupId>
+                <artifactId>flowlong-spring-boot-starter</artifactId>
+                <version>${flowlong.version}</version>
             </dependency>
 
         </dependencies>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.workflow.mapper.WflowProcessGroupMapper">
+    
+    <resultMap type="WflowProcessGroup" id="WflowProcessGroupResult">
+        <result property="id"    column="id"    />
+        <result property="groupName"    column="group_name"    />
+        <result property="sortNum"    column="sort_num"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectWflowProcessGroupVo">
+        select
+             a.id,
+             a.group_name,
+             a.sort_num,
+             a.create_by,
+             a.create_time,
+             a.update_by,
+             a.update_time,
+             a.del_flag
+        from wflow_process_group as a
+    </sql>
+
+    <select id="selectWflowProcessGroupList" parameterType="WflowProcessGroup" resultMap="WflowProcessGroupResult">
+        <include refid="selectWflowProcessGroupVo"/>
+        <where>  
+            <if test="groupName != null  and groupName != ''"> and a.group_name like concat('%', #{groupName}, '%')</if>
+            <if test="sortNum != null "> and a.sort_num = #{sortNum}</if>
+        </where>
+    </select>
+    
+    <select id="selectWflowProcessGroupById" parameterType="Long" resultMap="WflowProcessGroupResult">
+        <include refid="selectWflowProcessGroupVo"/>
+        where a.id = #{id}
+    </select>
+        
+    <insert id="insertWflowProcessGroup" parameterType="WflowProcessGroup" useGeneratedKeys="true" keyProperty="id">
+        insert into wflow_process_group
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="groupName != null">group_name,</if>
+            <if test="sortNum != null">sort_num,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="groupName != null">#{groupName},</if>
+            <if test="sortNum != null">#{sortNum},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWflowProcessGroup" parameterType="WflowProcessGroup">
+        update wflow_process_group
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="groupName != null">group_name = #{groupName},</if>
+            <if test="sortNum != null">sort_num = #{sortNum},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWflowProcessGroupById" parameterType="Long">
+        delete from wflow_process_group where id = #{id}
+    </delete>
+
+    <delete id="deleteWflowProcessGroupByIds" parameterType="String">
+        delete from wflow_process_group where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

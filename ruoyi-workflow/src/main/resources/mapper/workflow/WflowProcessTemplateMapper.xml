@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.workflow.mapper.WflowProcessTemplateMapper">
+    
+    <resultMap type="WflowProcessTemplate" id="WflowProcessTemplateResult">
+        <result property="id"    column="id"    />
+        <result property="processKey"    column="process_key"    />
+        <result property="processName"    column="process_name"    />
+        <result property="processIcon"    column="process_icon"    />
+        <result property="processSort"    column="process_sort"    />
+        <result property="processState"    column="process_state"    />
+        <result property="processType"    column="process_type"    />
+        <result property="activeVersion"    column="active_version"    />
+        <result property="nowVersion"    column="now_version"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectWflowProcessTemplateVo">
+        select
+             a.id,
+             a.process_key,
+             a.process_name,
+             a.process_icon,
+             a.process_sort,
+             a.process_state,
+             a.process_type,
+             a.active_version,
+             a.now_version,
+             a.remark,
+             a.create_by,
+             a.create_time,
+             a.update_by,
+             a.update_time,
+             a.del_flag
+        from wflow_process_template as a
+    </sql>
+
+    <select id="selectWflowProcessTemplateList" parameterType="WflowProcessTemplate" resultMap="WflowProcessTemplateResult">
+        <include refid="selectWflowProcessTemplateVo"/>
+        <where>  
+            <if test="processKey != null  and processKey != ''"> and a.process_key = #{processKey}</if>
+            <if test="processName != null  and processName != ''"> and a.process_name like concat('%', #{processName}, '%')</if>
+            <if test="processSort != null "> and a.process_sort = #{processSort}</if>
+            <if test="processState != null  and processState != ''"> and a.process_state = #{processState}</if>
+            <if test="processType != null  and processType != ''"> and a.process_type = #{processType}</if>
+            <if test="activeVersion != null "> and a.active_version = #{activeVersion}</if>
+        </where>
+    </select>
+    
+    <select id="selectWflowProcessTemplateById" parameterType="Long" resultMap="WflowProcessTemplateResult">
+        <include refid="selectWflowProcessTemplateVo"/>
+        where a.id = #{id}
+    </select>
+        
+    <insert id="insertWflowProcessTemplate" parameterType="WflowProcessTemplate" useGeneratedKeys="true" keyProperty="id">
+        insert into wflow_process_template
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="processKey != null">process_key,</if>
+            <if test="processName != null">process_name,</if>
+            <if test="processIcon != null">process_icon,</if>
+            <if test="processSort != null">process_sort,</if>
+            <if test="processState != null">process_state,</if>
+            <if test="processType != null">process_type,</if>
+            <if test="activeVersion != null">active_version,</if>
+            <if test="nowVersion != null">now_version,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="processKey != null">#{processKey},</if>
+            <if test="processName != null">#{processName},</if>
+            <if test="processIcon != null">#{processIcon},</if>
+            <if test="processSort != null">#{processSort},</if>
+            <if test="processState != null">#{processState},</if>
+            <if test="processType != null">#{processType},</if>
+            <if test="activeVersion != null">#{activeVersion},</if>
+            <if test="nowVersion != null">#{nowVersion},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWflowProcessTemplate" parameterType="WflowProcessTemplate">
+        update wflow_process_template
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="processKey != null">process_key = #{processKey},</if>
+            <if test="processName != null">process_name = #{processName},</if>
+            <if test="processIcon != null">process_icon = #{processIcon},</if>
+            <if test="processSort != null">process_sort = #{processSort},</if>
+            <if test="processState != null">process_state = #{processState},</if>
+            <if test="processType != null">process_type = #{processType},</if>
+            <if test="activeVersion != null">active_version = #{activeVersion},</if>
+            <if test="nowVersion != null">now_version = #{nowVersion},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWflowProcessTemplateById" parameterType="Long">
+        delete from wflow_process_template where id = #{id}
+    </delete>
+
+    <delete id="deleteWflowProcessTemplateByIds" parameterType="String">
+        delete from wflow_process_template where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -14,7 +14,7 @@ import com.ruoyi.generator.domain.GenTableColumn;
 
 /**
  * 模板处理工具类
- * 
+ *
  * @author ruoyi
  */
 public class VelocityUtils
@@ -138,15 +138,15 @@ public class VelocityUtils
         templates.add("vm/js/api.js.vm");
         if (GenConstants.TPL_CRUD.equals(tplCategory))
         {
-            templates.add("vm/vue/index.vue.vm");
+            templates.add("vm/vue/v3/index.vue.vm");
         }
         else if (GenConstants.TPL_TREE.equals(tplCategory))
         {
-            templates.add("vm/vue/index-tree.vue.vm");
+            templates.add("vm/vue/v3/index-tree.vue.vm");
         }
         else if (GenConstants.TPL_SUB.equals(tplCategory))
         {
-            templates.add("vm/vue/index.vue.vm");
+            templates.add("vm/vue/v3/index.vue.vm");
             templates.add("vm/java/sub-domain.java.vm");
         }
         return templates;
@@ -233,7 +233,7 @@ public class VelocityUtils
 
     /**
      * 根据列类型获取导入包
-     * 
+     *
      * @param genTable 业务表对象
      * @return 返回需要导入的包列表
      */
@@ -263,7 +263,7 @@ public class VelocityUtils
 
     /**
      * 根据列类型获取字典组
-     * 
+     *
      * @param genTable 业务表对象
      * @return 返回字典组
      */
@@ -282,7 +282,7 @@ public class VelocityUtils
 
     /**
      * 添加字典列表
-     * 
+     *
      * @param dicts 字典列表
      * @param columns 列集合
      */

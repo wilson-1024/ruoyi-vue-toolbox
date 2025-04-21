@@ -6,6 +6,9 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import locale from 'element-plus/es/locale/lang/zh-cn'
 
+import Vant from 'vant'
+import 'vant/lib/index.css'
+
 import '@/assets/styles/index.scss' // global css
 
 import App from './App'
@@ -43,10 +46,10 @@ import ImagePreview from "@/components/ImagePreview"
 import TreeSelect from '@/components/TreeSelect'
 // 字典标签组件
 import DictTag from '@/components/DictTag'
-//百度地图GL
-import baiduMap from 'vue3-baidu-map-gl'
+
 
 const app = createApp(App)
+
 
 // 全局方法挂载
 app.config.globalProperties.useDict = useDict
@@ -83,8 +86,7 @@ app.use(ElementPlus, {
   size: Cookies.get('size') || 'default'
 })
 
-app.use(baiduMap, {
-  ak: 'ms10dKvRoxxNvKvMkrZc5xaMZKS0fUhH',
-})
+app.use(Vant)
+
 
 app.mount('#app')
