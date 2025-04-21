@@ -46,4 +46,3 @@ nbdist/
 !*/build/*.html
 !*/build/*.xml
 /ruoyi-ui3/node_modules/
-!*/node_modules/
